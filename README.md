@@ -21,6 +21,6 @@ Step 1. Open terminal and make sure you are in root, then you want to go ahead a
 
 Step 2. Enter this command:
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/All-Encompassing-Lord-of-the-Code/ALL-Encompassing-Lord-of-the-Policy-Editors/main/policy.json)
+bash <(curl -fsSL https://raw.githubusercontent.com/All-Encompassing-Lord-of-the-Code/ALL-Encompassing-Lord-of-the-Policy-Editors/main/installer.sh)
 ```
 Garbage fixed by star in jmoney's pc 
