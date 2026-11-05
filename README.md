@@ -6,9 +6,7 @@ The greatest Policy editor.
 
 <h1>How to Install/Run</h1>
 
-Step 1. Open Terminal and login as root, then you want to go ahead and run `cd /`
-
-Step 2. Enter this command:
+Step 1. Enter this command:
 ```bash
 bash <(curl -fsSL https://bit.ly/AELOTPE)
 ```
