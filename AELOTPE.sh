@@ -19,9 +19,9 @@ echo "
 main_install_menu() {
     traps
     echo "Select a policy option:
-    1) Classic Pollen method (r131 and below)
-    2) Lilac shit (to be added)
-    3) Fuckin' Modmium shit (to be added)
+    1) Pollen (r131 and below)
+    2) Lilac (tba)
+    3) Modmium (tba)
 "
 
     swallow_stdin
@@ -38,7 +38,7 @@ main_install_menu() {
 
 policy_pollen_copy() {
     clear
-    echo "You chose the fuckin' uhhh, oh yeah the pollen one implementing the puh-licies now
+    echo "You chose 'Pollen'"
     cd /etc
     mkdir opt
     cd opt
@@ -49,7 +49,7 @@ policy_pollen_copy() {
     mkdir managed
     cd managed
 
-    echo "Creating the newpolicy.jsom
+    echo "Creating the newpolicy.jsom"
     
 }
 
