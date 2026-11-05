@@ -1,7 +1,8 @@
 #!/bin/bash
-
 #A better policy Editor
 # fr jmoney46 68 240 67
+
+cd /
 
 if [ $(id -u) -ne 0 ]; then
     echo "Run this script as root (sudo su)"
