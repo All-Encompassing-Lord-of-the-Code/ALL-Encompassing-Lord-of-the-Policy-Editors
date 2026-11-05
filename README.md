@@ -1,7 +1,7 @@
 # ALL-Encompassing-Lord-of-the-Policy-Editors
 The greatest Policy editor.
 
-<h1>We have had to deal with horrible Policy Editors that straight up don't Fucking work!</h1>
+<p>We have had to deal with horrible Policy Editors that straight up don't Fucking work!</p>
 <p>So we are making one that works with the knowledge of what not to do from mistakes of others</p>
 
 <h1>RootFS</h1>
