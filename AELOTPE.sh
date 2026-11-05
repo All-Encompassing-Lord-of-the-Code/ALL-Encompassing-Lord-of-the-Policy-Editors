@@ -36,6 +36,23 @@ main_install_menu() {
 
 }
 
+policy_pollen_copy() {
+    clear
+    echo "You chose the fuckin' uhhh, oh yeah the pollen one implementing the puh-licies now
+    cd /etc
+    mkdir opt
+    cd opt
+    mkdir chrome
+    cd chrome
+    mkdir policies
+    cd policies
+    mkdir managed
+    cd managed
+
+    echo "Creating the newpolicy.jsom
+    
+}
+
 runjon() {
     clear
     trap 'kill -2 $! >/dev/null 2>&1' INT
