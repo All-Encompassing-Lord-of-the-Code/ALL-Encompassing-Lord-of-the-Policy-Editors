@@ -16,6 +16,36 @@ echo "
       WELCOME TO THE ALL ENCOMPASSING LORD OF THE POLICY EDITORS!
       A policy tool for all chrome os versions."
 
+main_install_menu() {
+    traps
+    echo "Select a policy option:
+    1) Classic Pollen method (r131 and below)
+    2) Lilac shit (to be added)
+    3) Fuckin' Modmium shit (to be added)
+"
+
+    swallow_stdin
+    read -r -p "Pick an option 1- 3, q to quit> " choise
+    case "$choise" in
+    
+    1) runjon policy_pollen_copy ;;
+    q) exit ;;
+
+    *) echo && echo "Invalid option." && echo ;;
+    esac
+
+}
+
+runjon() {
+    clear
+    trap 'kill -2 $! >/dev/null 2>&1' INT
+    (
+        $@
+    )
+    trap '' INT
+    clear
+}
+
 ensure_rw() {
     local test_file="/usr/bin/.rwtest.$$"
     local tool="/usr/share/vboot/bin/make_dev_ssd.sh"
