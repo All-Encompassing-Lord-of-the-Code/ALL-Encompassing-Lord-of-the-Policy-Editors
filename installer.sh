@@ -47,7 +47,7 @@ sleep 1
 
 read -p 'continue? (y, n): ' ANS
 
-if [ $ANS != 'y' ]; then
+if [ $ANS = 'y' ]; then
 
 mkdir -p /etc/opt/chrome/policies/managed
 
