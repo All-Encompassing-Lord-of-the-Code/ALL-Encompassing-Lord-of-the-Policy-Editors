@@ -69,7 +69,7 @@ main_menu() {
 
 policy_pollen_copy() {
     clear
-    echo "You chose 'Pollen'"
+    echo "You chose 'pollen' LIKE A NIGGER!"
     cd /
     mkdir /etc/opt
     mkdir /etc/opt/chrome
