@@ -35,8 +35,6 @@ swallow_stdin() {
     done
 }
 
-cd /
-
 if [ $(id -u) -ne 0 ]; then
     echo "Run this script as root (sudo su)"
     exit
