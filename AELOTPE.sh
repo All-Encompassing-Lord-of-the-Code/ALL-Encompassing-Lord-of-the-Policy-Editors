@@ -41,59 +41,6 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 echo "  
-
-    .............................                                        .
- .....................................                               .
-                  ..........=+****+=:.. ....                         .
-                 .......:*############*:.:-....                      .
-                 .:.....*###############***=...                      .
-                ..:.....-*#%#####%########*=................         .
-                .:......:%%##*####*#*=+-*%#-::................       .
-               ..+.......*%#+**#*###%##=:+%++...::-:.....-....       .
-              ..:*-......:@%#%%#%#%%%%#=..#+=-----:.....-...         .
-              ..=#*......-#%#%@%%%%%##*-:.==....::.....::...         .
-             ...*#%:.....-+%#%%#%+=::..*#=+...........-:...          .
-             ...#%%=.....-=###+*=::...::::-...:.....:-:..            .
-             ...#%@+:....:=###::.......:.:=.:.....::-:...            .
-              ..#%@#:....:=###=:.........==......:--....             .
-             ..:%@@@-....:=#%#+::..:::..:=-....:-=:..                .
-             ..-%@@@#::..:=#@%#+++-:.:-:.=-:-:-=:....                .
-             ..+@@@@@-:..-=+@%#+====--+.:=---==...                   .
-             ..%#%@@@+:::-==*@%+=--#**-::=+==-....                   .
-             .=%:%@@@#:::-===@%#+::::-.:=**==..  ..                  .
-           ...*-:%@@@%-::-===%%===+::...:=*::-+=:......              .
-           ..:*+:%@@@@*::====%@#+::=*-:::::::......:::.....          .
-           ..+*:+@@@@@@+-====#%@*=-:.:=#*-:::.::.....-#+...          .
-           ..-#:=#@@@@@@*===++#@#+=::..:=###+-::::..::###:..         .
-             .:*.-#%%%*@#====+#@%+=-:::::*%####*-::::=%%##.          .
-             ........=:=..-==+#%*+++=:::-#%%%%%##*=:=#%%%*..         .
-                     ..  ..-+=#+===+==-:*%%%@@%%%%*#%@@@%..          .
-                          ..=+======+++#@@@@@@@@@%%@@@%=...          .
-                           ..**++==++#@@@@@@@@@%##+:....             .
-                           ..+++++++++===++++=--==...                .
-                            .-*+=--=========-:..-=...                .
-                            .:=--::...:---:....:=:..                 .
-                           ..:=.-.::.........:.:....                 .
-                           ....::...:........:-:..                   .
-                             ..=:............:-...                   .
-                           ...=:.............::...                   .
-                          ...--.............:::...                   .
-                       ....:=-:..::........::::...                   .
-                      ....::::::::::::....:::::...                   .
-                    ....:::::::::::::::::::::::...                   .
-                  ....:::::-+*###%%%#*+++#+===....                   .
-                  ...=+####%%%%%#=:::..:-=*#*=..                     .
-                  .-#%%%%%%%%%+::.......::**+:.                      .
-                 .:%%%%%%%%%-::.........::=-::.                      .
-                 .*%%%%%%%*::::::.......::-=::..                     .
-                ..=%%%%%%+:::::::::.:.....:--:.                      .
-                .::*%%%%#+++++++-:::::...:::=::..                    .
-                .:.-%@@@*+++++++++-::::....:=:::..                   .
-                ..::-+*%#++++++++++=-:::...:::::..                   .
-                 ..::--==++++++++=-::::::...:::::...                 .
-                 .::....:=++++++++=::::::...::.:::...                .
-                ..::...::-=++++*++++-:::::::::.:::...                .
-        
       WELCOME TO THE ALL ENCOMPASSING LORD OF THE POLICY EDITORS!
       A policy tool for all chrome os versions."
 
@@ -195,29 +142,127 @@ ensure_rw() {
     exit 0
 }
 
-install_python() {
-    if command -v python3 >/dev/null; then
-        log "Python already installed."
-        return
+
+
+install() {
+    local url="$1"
+    local dest="$2"
+    local mode="${3:-0755}"
+    local file="$DEPS_TMP/$(basename "$dest")"
+
+    if [ -e "$dest" ]; then
+        return 0
     fi
-    arch="$(uname -m)"
-    case "$arch" in
-        amd64|x86_64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-x86_64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
-        aarch64|arm64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-aarch64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
-        *) error "Unsupported architecture: $arch" ;;
-    esac
-    tmp="/tmp/python"
-    rm -rf "$tmp"
-    mkdir -p "$tmp"
-    curl -fsSL "$PY_URL" -o "$tmp/python.tar.gz" || error "Python download failed"
-    rm -rf /mnt/stateful_partition/python3
-    mkdir -p /mnt/stateful_partition/python3
-    tar -I zstd -xf "$tmp/python.tar.gz" -C /mnt/stateful_partition/python3 --strip-components=1 || error "Python extract failed"
-    ln -sf /mnt/stateful_partition/python3/bin/python3 /usr/bin/python3
-    ln -sf /mnt/stateful_partition/python3/bin/python3 /usr/bin/python
-    rm -rf "$tmp"
-    log "Python installed."
+
+    mkdir -p "$(dirname "$dest")" || return 1
+
+    echo "[DEPS] Installing $(basename "$dest")..."
+
+    if ! curl -fsSL --retry 3 "$url" -o "$file" ||
+        [ ! -s "$file" ]; then
+        echo "[ERROR] Download failed: $dest"
+        return 1
+    fi
+
+    if ! command install -m "$mode" "$file" "$dest" ||
+        [ ! -s "$dest" ]; then
+        echo "[ERROR] Installation failed: $dest"
+        return 1
+    fi
 }
 
+link() {
+    local target="$1"
+    local dest="$2"
+
+    if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$target" ]; then
+        return 0
+    fi
+
+    ln -sfn "$target" "$dest" || return 1
+
+    [ -L "$dest" ] && [ "$(readlink "$dest")" = "$target" ] || {
+        echo "[ERROR] Link failed: $dest"
+        return 1
+    }
+}
+
+install_deps() {
+    local arch
+
+    DEPS_DIR="/mnt/stateful_partition"
+    DEPS_TMP="$(mktemp -d)" || return 1
+
+    case "$(uname -m)" in
+        x86_64|amd64)
+            arch="x86_64"
+            ;;
+        aarch64|arm64)
+            arch="aarch64"
+            ;;
+        *)
+            echo "[ERROR] Unsupported architecture."
+            rm -rf "$DEPS_TMP"
+            return 1
+            ;;
+    esac
+
+    mkdir -p "$DEPS_DIR" || {
+        rm -rf "$DEPS_TMP"
+        return 1
+    }
+
+    case "$arch" in
+        x86_64)
+            py_url="$PY_BASE/cpython-3.16.0a1+20261026-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
+            binary="chattr-x86_64"
+            ;;
+        aarch64)
+            py_url="$PY_BASE/cpython-3.16.0a1+20261026-aarch64-unknown-linux-musl-install_only_stripped.tar.gz"
+            binary="chattr-arm64"
+            ;;
+    esac
+
+    if [ ! -x "$DEPS_DIR/python3/bin/python3" ]; then
+        echo "[DEPS] Installing CPython..."
+
+        if ! curl -fsSL --retry 3 "$py_url" -o "$DEPS_TMP/python.tar.gz" ||
+            ! tar -I zstd -xf "$DEPS_TMP/python.tar.gz" \
+                -C "$DEPS_DIR" --strip-components=1 ||
+            [ ! -x "$DEPS_DIR/python3/bin/python3" ]; then
+            echo "[ERROR] CPython installation failed."
+            rm -rf "$DEPS_TMP"
+            return 1
+        fi
+    fi
+
+    link "$DEPS_DIR/python3/bin/python3" /usr/bin/python3 || {
+        rm -rf "$DEPS_TMP"
+        return 1
+    }
+
+    link "$DEPS_DIR/python3/bin/python3" /usr/bin/python || {
+        rm -rf "$DEPS_TMP"
+        return 1
+    }
+
+    install \
+        "https://github.com/All-Encompassing-Lord-of-the-Policy-Editors/ALL-Encompassing-Lord-of-the-Policy-Editors/raw/main/bin/$binary" \
+        "$DEPS_DIR/chattr" || {
+        rm -rf "$DEPS_TMP"
+        return 1
+    }
+
+    link "$DEPS_DIR/chattr" /usr/bin/chattr || {
+        rm -rf "$DEPS_TMP"
+        return 1
+    }
+
+    rm -rf "$DEPS_TMP"
+
+    echo "[DEPS] Dependencies ready."
+}
+
+install_deps
 ensure_rw
 main_menu
