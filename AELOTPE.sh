@@ -2,6 +2,39 @@
 #A better policy Editor
 # fr jmoney46 68 240 67
 
+get_largest_cros_blockdev() {
+    local largest size dev_name tmp_size remo
+    size=0
+    for blockdev in /sys/block/*; do
+        dev_name="${blockdev##*/}"
+        echo "$dev_name" | grep -q '^\(loop\|ram\)' && continue
+        tmp_size=$(cat "$blockdev"/size)
+        remo=$(cat "$blockdev"/removable)
+        if [ "$tmp_size" -gt "$size" ] && [ "${remo:-0}" -eq 0 ]; then
+            case "$(doas sfdisk -l -o name "/dev/$dev_name" 2>/dev/null)" in
+                *STATE*KERN-A*ROOT-A*KERN-B*ROOT-B*)
+                    largest="/dev/$dev_name"
+                    size="$tmp_size"
+                    ;;
+            esac
+        fi
+    done
+    echo "$largest"
+}
+
+traps() {
+    set +e
+    trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+    trap 'echo \"${last_command}\" command failed with exit code $? - press a key to exit.' EXIT
+    trap '' INT
+}
+
+swallow_stdin() {
+    while read -t 0 notused; do
+        read input
+    done
+}
+
 cd /
 
 if [ $(id -u) -ne 0 ]; then
