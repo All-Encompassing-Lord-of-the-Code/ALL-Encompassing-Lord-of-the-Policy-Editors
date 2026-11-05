@@ -1,5 +1,5 @@
 # ALL-Encompassing-Lord-of-the-Policy-Editors
-The greatest Policy editor since Pentagon Policy Editor
+The greatest Policy editor since StarkMist111960's Pentagon Policy Editor (repo deleted, policy JSON still available) 
 
 <h1>We have had to deal with horrible Policy Editors that straight up don't Fucking work!</h1>
 <p>Stuff Like Octagon and what not do not work so we created the better one, no gay commands that require vim or charred, just the straight policy editor that works for versions under r131.</p>
