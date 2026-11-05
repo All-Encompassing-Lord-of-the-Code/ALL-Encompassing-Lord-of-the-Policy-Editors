@@ -66,14 +66,14 @@ main_menu() {
 
 policy_pollen_copy() {
     clear
-    echo "You chose 'pollen' LIKE A NIGGER!"
+    echo "You chose pollen policy editor, this is for r131 and below."
     cd /
     mkdir /etc/opt
     mkdir /etc/opt/chrome
     mkdir /etc/opt/chrome/policies
     mkdir /etc/opt/chrome/policies/managed
+    curl -fsSL https://raw.githubusercontent.com/All-Encompassing-Lord-of-the-Code/ALL-Encompassing-Lord-of-the-Policy-Editors/main/policy.json -o /etc/opt/chrome/policies/managed/policy.json
 
-    
 }
 
 runjon() {
