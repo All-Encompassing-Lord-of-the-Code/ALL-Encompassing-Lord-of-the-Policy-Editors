@@ -1,6 +1,4 @@
 #!/bin/bash
-#A better policy Editor
-# fr jmoney46 68 240 67
 
 get_largest_cros_blockdev() {
     local largest size dev_name tmp_size remo
@@ -47,7 +45,7 @@ echo "
       WELCOME TO THE ALL ENCOMPASSING LORD OF THE POLICY EDITORS!
       A policy tool for all chrome os versions."
 
-main_install_menu() {
+main_menu() {
     traps
     echo "Select a policy option:
     1) Pollen (r131 and below)
@@ -70,17 +68,12 @@ main_install_menu() {
 policy_pollen_copy() {
     clear
     echo "You chose 'Pollen'"
-    cd /etc
-    mkdir opt
-    cd opt
-    mkdir chrome
-    cd chrome
-    mkdir policies
-    cd policies
-    mkdir managed
-    cd managed
+    cd /
+    mkdir /etc/opt
+    mkdir /etc/opt/chrome
+    mkdir /etc/opt/chrome/policies
+    mkdir /etc/opt/chrome/policies/managed
 
-    echo "Creating the newpolicy.jsom"
     
 }
 
@@ -149,4 +142,5 @@ ensure_rw() {
 
     exit 0
 }
-ensure_rw()
+ensure_rw
+main_menu
