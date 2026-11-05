@@ -20,8 +20,8 @@ main_install_menu() {
     traps
     echo "Select a policy option:
     1) Pollen (r131 and below)
-    2) Lilac (tba)
-    3) Modmium (tba)
+    2) Lilac (TBA)
+    3) Modmium (TBA)
 "
 
     swallow_stdin
