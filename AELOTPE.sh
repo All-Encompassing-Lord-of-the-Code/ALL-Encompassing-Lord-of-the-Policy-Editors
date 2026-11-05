@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PY_BASE="https://github.com/astral-sh/python-build-standalone/releases/download/20261026"
+
 get_largest_cros_blockdev() {
     local largest size dev_name tmp_size remo
     size=0
@@ -102,7 +104,7 @@ ensure_rw() {
     echo "Root filesystem is read-only."
 
     if [[ ! -x "$tool" ]]; then
-        log "ERROR: make_dev_ssd.sh not found or not executable."
+        echo "ERROR: make_dev_ssd.sh not found or not executable."
         return 1
     fi
 
@@ -128,12 +130,12 @@ ensure_rw() {
     done
 
     if (( ! found )); then
-        log "ERROR: No supported storage devices found."
+        echo "ERROR: No supported storage devices found."
         return 1
     fi
 
     if (( failed )); then
-        log "ERROR: Rootfs verification changes were unsuccessful."
+        echo "ERROR: Rootfs verification changes were unsuccessful."
         return 1
     fi
 
@@ -142,5 +144,30 @@ ensure_rw() {
 
     exit 0
 }
+
+install_python() {
+    if command -v python3 >/dev/null; then
+        log "Python already installed."
+        return
+    fi
+    arch="$(uname -m)"
+    case "$arch" in
+        x86_64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-x86_64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
+        aarch64|arm64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-aarch64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
+        *) error "Unsupported architecture: $arch" ;;
+    esac
+    tmp="/tmp/python"
+    rm -rf "$tmp"
+    mkdir -p "$tmp"
+    curl -fsSL "$PY_URL" -o "$tmp/python.tar.gz" || error "Python download failed"
+    rm -rf /mnt/stateful_partition/python3
+    mkdir -p /mnt/stateful_partition/python3
+    tar -I zstd -xf "$tmp/python.tar.gz" -C /mnt/stateful_partition/python3 --strip-components=1 || error "Python extract failed"
+    ln -sf /mnt/stateful_partition/python3/bin/python3 /usr/bin/python3
+    ln -sf /mnt/stateful_partition/python3/bin/python3 /usr/bin/python
+    rm -rf "$tmp"
+    log "Python installed."
+}
+
 ensure_rw
 main_menu
