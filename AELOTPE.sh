@@ -40,9 +40,6 @@ if [ $(id -u) -ne 0 ]; then
     exit
 fi
 
-
-clear
-
 echo "  
       WELCOME TO THE ALL ENCOMPASSING LORD OF THE POLICY EDITORS!
       A policy tool for all chrome os versions."
@@ -152,7 +149,7 @@ install_python() {
     fi
     arch="$(uname -m)"
     case "$arch" in
-        x86_64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-x86_64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
+        amd64|x86_64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-x86_64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
         aarch64|arm64) PY_URL="$PY_BASE/cpython-3.16.0a1+20261026-aarch64-unknown-linux-musl-install_only_stripped.tar.gz" ;;
         *) error "Unsupported architecture: $arch" ;;
     esac
