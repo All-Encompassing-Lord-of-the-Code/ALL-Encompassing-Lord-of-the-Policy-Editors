@@ -70,3 +70,4 @@ ensure_rw() {
 
     exit 0
 }
+ensure_rw()
