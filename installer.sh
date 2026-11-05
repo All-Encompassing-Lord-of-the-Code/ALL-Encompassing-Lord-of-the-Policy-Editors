@@ -12,26 +12,7 @@ fi
 
 clear
 
-echo "
-             ______
-          .-'      '-.
-        .'            '.
-       /                \
-      /                  \
-     |                    |
-     |                    |
-      \                  /
-       \                /
-        '.            .'
-          '-.______.-'
-        /  \        /  \
-       /    \      /    \
-      /      \____/      \
-      \      /    \      /
-       \    /      \    /
-        \  /        \  /
-         \/__________\/
-
+echo "  
       WELCOME TO THE ALL ENCOMPASSING LORD OF THE POLICY EDITORS!
       A better policy editor that actually works with no Clanka Clanka Slop, this will most likely be edited by StarkMist111960 and Star_Destroyer11, 
       because they know what they are doing, thanks"
