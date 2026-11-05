@@ -6,9 +6,8 @@ The greatest Policy editor.
 
 <h1>RootFS</h1>
 > [!WARNING]
-> DISABLING ROOTFS REQUIRES WP TO BE DISABLED AND WILL FUCK YOUR DEVICE IF YOU GO BACK INTO VERIFIED MODE
+> This will DISABLE ROOTFS; it requires WP TO BE DISABLED AND WILL BREAK YOUR DEVICE IF YOU GO BACK INTO VERIFIED MODE
 > Help on disabling WP can be found in Docs.mrchromebox.tech
-> The script disables it for you
 
 <h1>How to Install/Run</h1>
 
